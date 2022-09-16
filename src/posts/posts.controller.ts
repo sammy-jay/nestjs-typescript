@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  SerializeOptions,
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
@@ -18,6 +19,7 @@ import { PostsService } from './posts.service';
 
 @Controller('posts')
 @UseFilters(ExceptionLoggerFilter)
+@SerializeOptions({ strategy: 'excludeAll' })
 @UseGuards(JwtGuard)
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
