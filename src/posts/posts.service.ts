@@ -8,7 +8,7 @@ import { PostNotFoundException } from './exception/post-not-found.exception';
 @Injectable()
 export class PostsService {
   constructor(
-    @InjectRepository(Post) private postsRepository: Repository<Post>,
+    @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
   ) {}
 
   async getAllPosts() {
