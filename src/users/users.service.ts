@@ -23,6 +23,20 @@ export class UsersService {
     );
   }
 
+  async getById(id: number) {
+    const user = await this.usersRepository.findOne({
+      where: { id },
+    });
+    if (user) {
+      delete user.password;
+      return user;
+    }
+    throw new HttpException(
+      'User with this credentials not found.',
+      HttpStatus.NOT_FOUND,
+    );
+  }
+
   async create(userData: CreateUserDto) {
     const newUser = await this.usersRepository.create(userData);
     await this.usersRepository.save(newUser);
