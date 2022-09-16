@@ -6,13 +6,11 @@ import {
   HttpCode,
   Post,
   Req,
-  Res,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Response } from 'express';
 import { AuthService } from './auth.service';
-import { RegistrationDto } from './dto';
+import { Address, RegistrationDto } from './dto';
 import { JwtGuard } from './guard/jwt.guard';
 import { LocalGuard } from './guard/local.guard';
 import { RequestUser } from './interface/request-user.interface';
@@ -30,7 +28,10 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(@Body() registrationData: RegistrationDto) {
+  async register(
+    @Body() registrationData: RegistrationDto,
+    @Body('address') address: Address,
+  ) {
     return await this.authService.register(registrationData);
   }
 

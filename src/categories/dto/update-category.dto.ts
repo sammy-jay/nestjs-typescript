@@ -1,8 +1,8 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { Min, IsNotEmpty, IsNumberString } from 'class-validator';
-import { CreatePostDto } from './create-post.dto';
+import { CreateCategoryDto } from './create-category.dto';
 
-export class UpdatePostDto extends PartialType(CreatePostDto) {
+export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {
   @IsNumberString()
   @IsNotEmpty()
   @Min(1)

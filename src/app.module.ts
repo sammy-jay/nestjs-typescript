@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
-import { DatabaseModule } from './database.module';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_FILTER } from '@nestjs/core';
 import { ExceptionLoggerFilter } from './utils/exceptions-logger.filter';
+import { CategoriesModule } from './categories/categories.module';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ExceptionLoggerFilter } from './utils/exceptions-logger.filter';
     DatabaseModule,
     UsersModule,
     AuthModule,
+    CategoriesModule,
   ],
   providers: [
     {

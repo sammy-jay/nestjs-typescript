@@ -35,7 +35,6 @@ export class PostsController {
   @Get(':id')
   @HttpCode(200)
   getPostById(@Param() { id }: FindOneParams) {
-    console.log(typeof id);
     return this.postsService.getPostById(Number(id));
   }
 
@@ -47,8 +46,8 @@ export class PostsController {
 
   @Put(':id')
   @HttpCode(200)
-  async replacePost(@Param('id') id: string, @Body() post: UpdatePostDto) {
-    return this.postsService.replacePost(Number(id), post);
+  async updatePost(@Param('id') id: string, @Body() post: UpdatePostDto) {
+    return this.postsService.updatePost(Number(id), post);
   }
 
   @Delete(':id')

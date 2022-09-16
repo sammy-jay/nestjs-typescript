@@ -20,9 +20,9 @@ export class AuthService {
     try {
       const createdUser = await this.usersService.create({
         ...registrationData,
+        address: { ...registrationData.address },
         password: hashedPassword,
       });
-
       return createdUser;
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation) {
