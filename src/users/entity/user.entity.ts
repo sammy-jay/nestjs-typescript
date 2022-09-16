@@ -25,7 +25,7 @@ class User {
   @Exclude()
   public password: string;
 
-  @OneToOne(() => Address, { eager: false, cascade: true })
+  @OneToOne(() => Address, { eager: true, cascade: true })
   @JoinColumn()
   public address: Address;
 

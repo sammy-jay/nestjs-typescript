@@ -48,7 +48,7 @@ export class UsersService {
 
   async getAllUsersWithAddress() {
     return await this.usersRepository.find({
-      relations: ['address'],
+      relations: ['address', 'posts'],
     });
   }
 }

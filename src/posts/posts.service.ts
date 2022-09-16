@@ -13,13 +13,15 @@ export class PostsService {
   ) {}
 
   async getAllPosts() {
-    return await this.postsRepository.find({ relations: ['author'] });
+    return await this.postsRepository.find({
+      relations: ['author', 'categories'],
+    });
   }
 
   async getPostById(id: number) {
     const post = await this.postsRepository.findOne({
       where: { id },
-      relations: ['author'],
+      relations: ['categories'],
     });
     if (post) {
       return post;
@@ -36,7 +38,7 @@ export class PostsService {
     return newPost;
   }
 
-  async replacePost(id: number, post: UpdatePostDto) {
+  async updatePost(id: number, post: UpdatePostDto) {
     await this.postsRepository.update(id, post);
     const updatedPost = await this.postsRepository.findOne({
       where: { id },
