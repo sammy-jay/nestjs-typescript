@@ -7,11 +7,13 @@ import {
   Param,
   Post,
   Put,
+  Req,
   SerializeOptions,
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
+import { RequestUser } from 'src/auth/interface/request-user.interface';
 import { ExceptionLoggerFilter } from 'src/utils/exceptions-logger.filter';
 import { FindOneParams } from 'src/utils/find-one.params';
 import { CreatePostDto, UpdatePostDto } from './dto';
@@ -39,8 +41,8 @@ export class PostsController {
 
   @Post()
   @HttpCode(201)
-  async createPost(@Body() post: CreatePostDto) {
-    return this.postsService.createPost(post);
+  async createPost(@Body() post: CreatePostDto, @Req() req: RequestUser) {
+    return this.postsService.createPost(post, req.user);
   }
 
   @Put(':id')
