@@ -2,6 +2,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   Entity,
+  Relation,
   JoinColumn,
   OneToOne,
   OneToMany,
@@ -13,7 +14,7 @@ import Post from 'src/posts/entity/post.entity';
 @Entity()
 class User {
   @PrimaryGeneratedColumn()
-  public id?: number;
+  public id: number;
 
   @Column({ unique: true })
   public email: string;
@@ -27,7 +28,7 @@ class User {
 
   @OneToOne(() => Address, { eager: true, cascade: true })
   @JoinColumn()
-  public address: Address;
+  public address: Relation<Address>;
 
   @OneToMany(() => Post, (post: Post) => post.author)
   public posts: Post[];
