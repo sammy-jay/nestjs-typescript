@@ -1,11 +1,4 @@
-import User from 'src/users/entity/user.entity';
-import {
-  Column,
-  PrimaryGeneratedColumn,
-  Entity,
-  OneToOne,
-  Relation,
-} from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
 
 @Entity()
 class PublicFile {

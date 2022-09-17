@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import PublicFile from './entity/public-file.entity';
 import { v4 as uuid } from 'uuid';
 import { S3 } from 'aws-sdk';
-import User from 'src/users/entity/user.entity';
 
 @Injectable()
 export class FilesService {
