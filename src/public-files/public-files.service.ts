@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid';
 import { S3 } from 'aws-sdk';
 
 @Injectable()
-export class FilesService {
+export class PublicFilesService {
   constructor(
     @InjectRepository(PublicFile)
     private readonly publicFilesRepository: Repository<PublicFile>,
@@ -22,7 +22,7 @@ export class FilesService {
         ACL: 'public-read',
         Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
         Body: dataBuffer,
-        Key: `${id}-${filename}`,
+        Key: `avatars/${id}-${filename}`,
       })
       .promise();
 

@@ -10,7 +10,8 @@ import {
 import { Exclude } from 'class-transformer';
 import Address from './address.entity';
 import Post from '../../posts/entity/post.entity';
-import PublicFile from 'src/files/entity/public-file.entity';
+import PublicFile from 'src/public-files/entity/public-file.entity';
+import PrivateFile from 'src/private-files/entity/private-file.entity';
 
 @Entity()
 class User {
@@ -40,6 +41,9 @@ class User {
 
   @OneToMany(() => Post, (post: Post) => post.author)
   public posts: Post[];
+
+  @OneToMany(() => PrivateFile, (privateFile: PrivateFile) => privateFile.owner)
+  public files: PrivateFile[];
 }
 
 export default User;

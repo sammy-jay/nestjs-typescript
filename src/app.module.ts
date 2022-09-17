@@ -8,7 +8,8 @@ import { APP_FILTER } from '@nestjs/core';
 import { ExceptionLoggerFilter } from './utils/exceptions-logger.filter';
 import { CategoriesModule } from './categories/categories.module';
 import { DatabaseModule } from './database/database.module';
-import { FilesModule } from './files/files.module';
+import { PublicFilesModule } from './public-files/public-files.module';
+import { PrivateFilesModule } from './private-files/private-files.module';
 
 @Module({
   imports: [
@@ -29,7 +30,8 @@ import { FilesModule } from './files/files.module';
     UsersModule,
     AuthModule,
     CategoriesModule,
-    FilesModule,
+    PublicFilesModule,
+    PrivateFilesModule,
   ],
   providers: [
     {
