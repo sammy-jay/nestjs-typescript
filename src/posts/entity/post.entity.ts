@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import User from '../../users/entity/user.entity';
 import Category from '../../categories/entity/category.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 class Post {
@@ -18,16 +19,17 @@ class Post {
   @Column()
   public title: string;
 
-  @Column()
-  public content: string;
+  // @Column('simple-array')
+  @Column('text', { array: true })
+  public paragraphs: string[];
 
+  @Exclude()
   @Index('post_authorId_index')
   @ManyToOne(() => User, (author: User) => author.posts)
   public author: User;
 
-  @ManyToMany(() => Category, (category: Category) => category.posts, {
-    cascade: true,
-  })
+  @Exclude()
+  @ManyToMany(() => Category, (category: Category) => category.posts, {})
   @JoinTable()
   public categories: Category[];
 }

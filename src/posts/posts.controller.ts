@@ -28,17 +28,19 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get()
-  async getPosts(@Query('search') search: string) {
-    if (search) {
-      console.log('called');
-      return this.postsService.searchForPosts(search);
+  @HttpCode(200)
+  getAllPosts(@Query('paragraph') paragraph: string) {
+    if (paragraph) {
+      return this.postsService.getPostsWithParagraph(paragraph);
     }
     return this.postsService.getAllPosts();
   }
 
-  @Get()
-  @HttpCode(200)
-  getAllPosts() {
+  @Get('search')
+  async getPosts(@Query('q') search: string) {
+    if (search) {
+      return this.postsService.searchForPosts(search);
+    }
     return this.postsService.getAllPosts();
   }
 

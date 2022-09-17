@@ -76,4 +76,11 @@ export class PostsService {
       where: { id: In(ids) },
     });
   }
+
+  async getPostsWithParagraph(paragraph: string) {
+    return await this.postsRepository.query(
+      'SELECT * FROM post WHERE $1 = ANY(paragraphs)',
+      [paragraph],
+    );
+  }
 }
