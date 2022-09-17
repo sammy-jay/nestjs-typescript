@@ -5,7 +5,7 @@ import {
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
-  Index
+  Index,
 } from 'typeorm';
 import User from '../../users/entity/user.entity';
 import Category from '../../categories/entity/category.entity';
