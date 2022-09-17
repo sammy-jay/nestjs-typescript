@@ -26,4 +26,3 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return await this.usersService.getById(payload.id);
   }
 }
-JWT_ACCESS_TOKEN_EXPIRATION_TIME

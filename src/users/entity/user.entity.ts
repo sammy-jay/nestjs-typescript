@@ -31,7 +31,7 @@ class User {
   @Column({ nullable: true })
   @Exclude()
   public currentHashedRefreshToken?: string;
-  
+
   @JoinColumn()
   @OneToOne(() => Address, { eager: true, cascade: true })
   public address: Relation<Address>;

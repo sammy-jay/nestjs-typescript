@@ -78,14 +78,17 @@ export class AuthService {
       secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
       expiresIn: `${expTime}`
     });
-    const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${expTime}`;
+    const refreshTokenCookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${expTime}`;
     return {
-      cookie,
-      token
+      refreshTokenCookie,
+      refreshToken
     }
   }
 
   getCookieForLogout() {
-    return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
+    return [
+      'Authentication=; HttpOnly; Path=/; Max-Age=0',
+      'Refresh=; HttpOnly; Path=/; Max-Age=0'
+    ];
   }
 }
