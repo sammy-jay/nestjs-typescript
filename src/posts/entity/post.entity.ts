@@ -6,8 +6,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import User from 'src/users/entity/user.entity';
-import Category from 'src/categories/entity/category.entity';
+import User from '../../users/entity/user.entity';
+import Category from '../../categories/entity/category.entity';
 
 @Entity()
 class Post {

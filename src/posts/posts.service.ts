@@ -17,9 +17,8 @@ export class PostsService {
       select: {
         id: true,
         title: true,
+        content: true,
       },
-      skip: 2,
-      take: 5,
       cache: true,
     });
   }
