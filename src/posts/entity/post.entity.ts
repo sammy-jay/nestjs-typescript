@@ -21,7 +21,7 @@ class Post {
   @Column()
   public content: string;
 
-  @Index('post_authorId_index')
+  
   @ManyToOne(() => User, (author: User) => author.posts)
   public author: User;
 
