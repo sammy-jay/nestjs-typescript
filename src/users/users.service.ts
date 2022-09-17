@@ -10,6 +10,7 @@ import { PrivateFilesService } from 'src/private-files/private-files.service';
 import { PublicFilesService } from 'src/public-files/public-files.service';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto';
+import * as bcrypt from 'bcrypt';
 import Address from './entity/address.entity';
 import User from './entity/user.entity';
 
@@ -124,5 +125,12 @@ export class UsersService {
       );
     }
     throw new NotFoundException('User with id ' + userId + ' not found.');
+  }
+
+ async setCurrentRefreshToken(refreshToken: string, userId: number) {
+    const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    await this.usersRepository.update(userId, {
+      currentHashedRefreshToken
+    });
   }
 }
