@@ -14,10 +14,14 @@ export class PostsService {
     private readonly postsSearchService: PostsSearchService,
   ) {}
 
-  async getAllPosts() {
+  async getAllPosts(offset?: number, limit?: number) {
     return await this.postsRepository.find({
       relations: ['categories', 'author'],
-      cache: true,
+      order: {
+        id: 'ASC',
+      },
+      skip: offset,
+      take: limit,
     });
   }
 
@@ -77,10 +81,14 @@ export class PostsService {
     });
   }
 
-  async getPostsWithParagraph(paragraph: string) {
+  async getPostsWithParagraph(
+    paragraph: string,
+    offset?: number,
+    limit?: number,
+  ) {
     return await this.postsRepository.query(
-      'SELECT * FROM post WHERE $1 = ANY(paragraphs)',
-      [paragraph],
+      'SELECT * FROM post WHERE $1 = ANY(paragraphs) OFFSET $2 LIMIT $3',
+      [paragraph, offset, limit],
     );
   }
 }
