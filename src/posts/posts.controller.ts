@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   SerializeOptions,
   UseFilters,
@@ -25,6 +26,15 @@ import { PostsService } from './posts.service';
 @UseGuards(JwtGuard)
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
+
+  @Get()
+  async getPosts(@Query('search') search: string) {
+    if (search) {
+      console.log('called');
+      return this.postsService.searchForPosts(search);
+    }
+    return this.postsService.getAllPosts();
+  }
 
   @Get()
   @HttpCode(200)

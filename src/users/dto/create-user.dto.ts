@@ -3,7 +3,6 @@ interface Address {
   city: string;
   country: string;
 }
-
 export class CreateUserDto {
   email: string;
   name: string;

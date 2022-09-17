@@ -9,7 +9,9 @@ import {
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import Address from './address.entity';
-import Post from 'src/posts/entity/post.entity';
+import Post from '../../posts/entity/post.entity';
+import PublicFile from 'src/public-files/entity/public-file.entity';
+import PrivateFile from 'src/private-files/entity/private-file.entity';
 
 @Entity()
 class User {
@@ -26,12 +28,22 @@ class User {
   @Exclude()
   public password: string;
 
-  @OneToOne(() => Address, { eager: true, cascade: true })
   @JoinColumn()
+  @OneToOne(() => Address, { eager: true, cascade: true })
   public address: Relation<Address>;
+
+  @JoinColumn()
+  @OneToOne(() => PublicFile, {
+    eager: true,
+    nullable: true,
+  })
+  public avatar?: Relation<PublicFile>;
 
   @OneToMany(() => Post, (post: Post) => post.author)
   public posts: Post[];
+
+  @OneToMany(() => PrivateFile, (privateFile: PrivateFile) => privateFile.owner)
+  public files: PrivateFile[];
 }
 
 export default User;

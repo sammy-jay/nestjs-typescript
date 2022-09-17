@@ -40,7 +40,7 @@ export class AuthController {
   @Post('login')
   async login(@Req() request: RequestUser) {
     const user = request.user;
-
+    delete user.password;
     const cookie = this.authService.getCookieWithJwtToken(user.id, user.email);
     request.res.setHeader('Set-Cookie', cookie);
     return user;
