@@ -10,6 +10,7 @@ import {
 import { Exclude } from 'class-transformer';
 import Address from './address.entity';
 import Post from '../../posts/entity/post.entity';
+import PublicFile from 'src/files/entity/public-file.entity';
 
 @Entity()
 class User {
@@ -26,9 +27,16 @@ class User {
   @Exclude()
   public password: string;
 
-  @OneToOne(() => Address, { eager: true, cascade: true })
   @JoinColumn()
+  @OneToOne(() => Address, { eager: true, cascade: true })
   public address: Relation<Address>;
+
+  @JoinColumn()
+  @OneToOne(() => PublicFile, {
+    eager: true,
+    nullable: true,
+  })
+  public avatar?: Relation<PublicFile>;
 
   @OneToMany(() => Post, (post: Post) => post.author)
   public posts: Post[];

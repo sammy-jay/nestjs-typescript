@@ -4,10 +4,11 @@ import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import User from './entity/user.entity';
 import Address from './entity/address.entity';
+import { FilesModule } from 'src/files/files.module';
 
 @Global()
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Address])],
+  imports: [TypeOrmModule.forFeature([User, Address]), FilesModule],
   providers: [UsersService],
   controllers: [UsersController],
   exports: [UsersService],
