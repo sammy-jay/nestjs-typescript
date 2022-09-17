@@ -52,7 +52,9 @@ export class PublicFilesService {
     fileId: number,
     queryRunner: QueryRunner,
   ) {
-    const file = await queryRunner.manager.findOne(PublicFile, { id: fileId });
+    const file = await queryRunner.manager.findOne(PublicFile, {
+      where: { id: fileId },
+    });
     const s3 = new S3();
     await s3
       .deleteObject({

@@ -3,13 +3,13 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
-import { UsersService } from '../users/users.service';
-import TokenPayload from './interface/token-payload.interface';
+import { UsersService } from 'src/users/users.service';
+import { TokenPayload } from '../interface/token-payload.interface';
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
   Strategy,
-  'jwt-refresh-token',
+  'jwt-refresh',
 ) {
   constructor(
     private readonly configService: ConfigService,
@@ -30,7 +30,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
     const refreshToken = request.cookies?.Refresh;
     return this.userService.getUserIfRefreshTokenMatches(
       refreshToken,
-      payload.userId,
+      payload.id,
     );
   }
 }

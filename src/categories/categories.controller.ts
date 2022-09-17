@@ -7,7 +7,6 @@ import {
   Delete,
   HttpCode,
   UseFilters,
-  SerializeOptions,
   UseGuards,
   Put,
 } from '@nestjs/common';
@@ -20,7 +19,6 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Controller('categories')
 @UseFilters(ExceptionLoggerFilter)
-@SerializeOptions({ strategy: 'excludeAll' })
 @UseGuards(JwtGuard)
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}

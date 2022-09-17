@@ -15,11 +15,15 @@ import { JwtGuard } from './guard/jwt.guard';
 import { JwtRefreshGuard } from './guard/jwt-refresh.guard';
 import { LocalGuard } from './guard/local.guard';
 import { RequestUser } from './interface/request-user.interface';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @HttpCode(200)
   @UseGuards(JwtGuard)
@@ -47,10 +51,8 @@ export class AuthController {
       user.email,
     );
     const { refreshTokenCookie, refreshToken } =
-      this.authenticationService.getCookieWithJwtRefreshToken(user.id);
-
+      await this.authService.getCookieWithJwtRefreshToken(user.id, user.email);
     await this.usersService.setCurrentRefreshToken(refreshToken, user.id);
-
     request.res.setHeader('Set-Cookie', [
       accessTokenCookie,
       refreshTokenCookie,
@@ -62,8 +64,10 @@ export class AuthController {
   refresh(@Req() request: RequestUser) {
     const user = request.user;
     delete user.password;
-    const accessTokenCookie =
-      this.authenticationService.getCookieWithJwtAccessToken(request.user.id);
+    const accessTokenCookie = this.authService.getCookieWithJwtToken(
+      user.id,
+      user.email,
+    );
 
     request.res.setHeader('Set-Cookie', accessTokenCookie);
     return user;
@@ -73,9 +77,6 @@ export class AuthController {
   @Get('logout')
   async logout(@Req() request: RequestUser) {
     await this.usersService.removeRefreshToken(request.user.id);
-    request.res.setHeader(
-      'Set-Cookie',
-      this.authenticationService.getCookiesForLogOut(),
-    );
+    request.res.setHeader('Set-Cookie', this.authService.getCookiesForLogout());
   }
 }

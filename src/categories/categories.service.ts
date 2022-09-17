@@ -14,12 +14,15 @@ export class CategoriesService {
   ) {}
 
   async getAllCategories() {
-    return await this.categoriesRepository.find({});
+    return await this.categoriesRepository.find({
+      relations: ['posts'],
+    });
   }
 
   async getCategoryById(id: number) {
     const post = await this.categoriesRepository.findOne({
       where: { id },
+      relations: ['posts'],
     });
     if (post) {
       return post;

@@ -64,31 +64,32 @@ export class AuthService {
   getCookieWithJwtToken(id: number, email: string) {
     const payload: TokenPayload = { id, email };
     const expTime = this.configService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME');
-    const token = this.jwtService.sign(payload,{
+    const token = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
-      expiresIn: `${expTime}`
+      expiresIn: expTime,
     });
     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${expTime}`;
   }
 
-  public getCookieWithJwtRefreshToken(id: number, email: string) {
-    const payload: TokenPayload = { id. email };
-     const expTime = this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME');
-    const token = this.jwtService.sign(payload, {
+  async getCookieWithJwtRefreshToken(id: number, email: string) {
+    const payload: TokenPayload = { id, email };
+    const expTime = this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME');
+    const refreshToken = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
-      expiresIn: `${expTime}`
+      expiresIn: `${expTime}`,
     });
-    const refreshTokenCookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${expTime}`;
+
+    const refreshTokenCookie = `Refresh=${refreshToken}; HttpOnly; Path=/; Max-Age=${expTime}`;
     return {
       refreshTokenCookie,
-      refreshToken
-    }
+      refreshToken,
+    };
   }
 
-  getCookieForLogout() {
+  getCookiesForLogout() {
     return [
       'Authentication=; HttpOnly; Path=/; Max-Age=0',
-      'Refresh=; HttpOnly; Path=/; Max-Age=0'
+      'Refresh=; HttpOnly; Path=/; Max-Age=0',
     ];
   }
 }

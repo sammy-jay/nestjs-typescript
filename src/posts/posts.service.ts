@@ -16,11 +16,7 @@ export class PostsService {
 
   async getAllPosts() {
     return await this.postsRepository.find({
-      select: {
-        id: true,
-        title: true,
-        content: true,
-      },
+      relations: ['categories', 'author'],
       cache: true,
     });
   }
@@ -28,12 +24,7 @@ export class PostsService {
   async getPostById(id: number) {
     const post = await this.postsRepository.findOne({
       where: { id },
-      select: {
-        id: true,
-        title: true,
-        author: { email: true },
-        categories: { id: true },
-      },
+      relations: ['categories', 'author'],
       cache: true,
     });
     if (post) {
@@ -49,6 +40,7 @@ export class PostsService {
       categories: [{ ...post.categories }],
     });
     await this.postsRepository.save(newPost);
+    console.log(newPost);
     delete newPost.author;
     return newPost;
   }
@@ -57,12 +49,7 @@ export class PostsService {
     await this.postsRepository.update(id, post);
     const updatedPost = await this.postsRepository.findOne({
       where: { id },
-      select: {
-        id: true,
-        title: true,
-        author: { email: true },
-        categories: { id: true },
-      },
+      relations: ['categories', 'author'],
       cache: true,
     });
     if (updatedPost) {
