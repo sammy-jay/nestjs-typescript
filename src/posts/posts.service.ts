@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import Post from './entity/post.entity';
 import { CreatePostDto, UpdatePostDto } from './dto';
 import { PostNotFoundException } from './exception/post-not-found.exception';
 import User from 'src/users/entity/user.entity';
+import PostsSearchService from './post-search.service';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
+    private readonly postsSearchService: PostsSearchService,
   ) {}
 
   async getAllPosts() {
@@ -64,6 +66,7 @@ export class PostsService {
       cache: true,
     });
     if (updatedPost) {
+      await this.postsSearchService.update(updatedPost);
       return updatedPost;
     }
     throw new PostNotFoundException(id);
@@ -71,7 +74,19 @@ export class PostsService {
 
   async deletePost(id: number) {
     const deleteResponse = await this.postsRepository.delete(id);
-    if (deleteResponse.affected) return;
-    throw new PostNotFoundException(id);
+    if (!deleteResponse.affected) throw new PostNotFoundException(id);
+    await this.postsSearchService.remove(id);
+    return;
+  }
+
+  async searchForPosts(text: string) {
+    const results = await this.postsSearchService.search(text);
+    const ids = results.map((result) => result.id);
+    if (!ids.length) {
+      return [];
+    }
+    return this.postsRepository.find({
+      where: { id: In(ids) },
+    });
   }
 }

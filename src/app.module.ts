@@ -10,6 +10,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { DatabaseModule } from './database/database.module';
 import { PublicFilesModule } from './public-files/public-files.module';
 import { PrivateFilesModule } from './private-files/private-files.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { PrivateFilesModule } from './private-files/private-files.module';
     CategoriesModule,
     PublicFilesModule,
     PrivateFilesModule,
+    SearchModule,
   ],
   providers: [
     {
