@@ -9,7 +9,6 @@ import {
   Put,
   Query,
   Req,
-  SerializeOptions,
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
@@ -17,30 +16,35 @@ import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { RequestUser } from 'src/auth/interface/request-user.interface';
 import { ExceptionLoggerFilter } from 'src/utils/exceptions-logger.filter';
 import { FindOneParams } from 'src/utils/find-one.params';
+import { PaginationParams } from 'src/utils/pagination.params';
 import { CreatePostDto, UpdatePostDto } from './dto';
 import { PostsService } from './posts.service';
 
 @Controller('posts')
 @UseFilters(ExceptionLoggerFilter)
-@SerializeOptions({ strategy: 'excludeAll' })
 @UseGuards(JwtGuard)
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get()
-  async getPosts(@Query('search') search: string) {
-    if (search) {
-      console.log('called');
-      return this.postsService.searchForPosts(search);
+  @HttpCode(200)
+  getAllPosts(
+    @Query('paragraph') paragraph: string,
+    @Query() { offset, limit }: PaginationParams,
+  ) {
+    if (paragraph) {
+      return this.postsService.getPostsWithParagraph(paragraph, offset, limit);
     }
-    return this.postsService.getAllPosts();
+    return this.postsService.getAllPosts(offset, limit);
   }
 
-  @Get()
-  @HttpCode(200)
-  getAllPosts() {
-    return this.postsService.getAllPosts();
-  }
+  // @Get('search')
+  // async getPosts(@Query('q') search: string) {
+  //   if (search) {
+  //     return this.postsService.searchForPosts(search);
+  //   }
+  //   return this.postsService.getAllPosts();
+  // }
 
   @Get(':id')
   @HttpCode(200)

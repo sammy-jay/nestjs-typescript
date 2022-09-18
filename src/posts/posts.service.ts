@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { FindManyOptions, In, MoreThan, Repository } from 'typeorm';
 import Post from './entity/post.entity';
 import { CreatePostDto, UpdatePostDto } from './dto';
 import { PostNotFoundException } from './exception/post-not-found.exception';
@@ -14,26 +14,33 @@ export class PostsService {
     private readonly postsSearchService: PostsSearchService,
   ) {}
 
-  async getAllPosts() {
-    return await this.postsRepository.find({
-      select: {
-        id: true,
-        title: true,
-        content: true,
+  async getAllPosts(offset?: number, limit?: number, startId?: number) {
+    const where: FindManyOptions<Post>['where'] = {};
+    let seperateCount = 0;
+    if (startId) {
+      where.id = MoreThan(startId);
+      seperateCount = await this.postsRepository.count();
+    }
+    const [items, count] = await this.postsRepository.findAndCount({
+      where,
+      relations: ['categories', 'author'],
+      order: {
+        id: 'ASC',
       },
-      cache: true,
+      skip: offset,
+      take: limit,
     });
+
+    return {
+      count: startId ? seperateCount : count,
+      items,
+    };
   }
 
   async getPostById(id: number) {
     const post = await this.postsRepository.findOne({
       where: { id },
-      select: {
-        id: true,
-        title: true,
-        author: { email: true },
-        categories: { id: true },
-      },
+      relations: ['categories', 'author'],
       cache: true,
     });
     if (post) {
@@ -49,6 +56,7 @@ export class PostsService {
       categories: [{ ...post.categories }],
     });
     await this.postsRepository.save(newPost);
+    console.log(newPost);
     delete newPost.author;
     return newPost;
   }
@@ -57,12 +65,7 @@ export class PostsService {
     await this.postsRepository.update(id, post);
     const updatedPost = await this.postsRepository.findOne({
       where: { id },
-      select: {
-        id: true,
-        title: true,
-        author: { email: true },
-        categories: { id: true },
-      },
+      relations: ['categories', 'author'],
       cache: true,
     });
     if (updatedPost) {
@@ -88,5 +91,16 @@ export class PostsService {
     return this.postsRepository.find({
       where: { id: In(ids) },
     });
+  }
+
+  async getPostsWithParagraph(
+    paragraph: string,
+    offset?: number,
+    limit?: number,
+  ) {
+    return await this.postsRepository.query(
+      'SELECT * FROM post WHERE $1 = ANY(paragraphs) OFFSET $2 LIMIT $3',
+      [paragraph, offset, limit],
+    );
   }
 }

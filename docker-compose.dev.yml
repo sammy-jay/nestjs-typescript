@@ -1,11 +1,11 @@
-version: "3.8"
+version: '3.8'
 
 services:
   setup:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
-    user: "0"
+    user: '0'
     command: >
       bash -c '
         if [ x${ELASTIC_PASSWORD} == x ]; then
@@ -57,7 +57,7 @@ services:
         echo "All done!";
       '
     healthcheck:
-      test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
+      test: ['CMD-SHELL', '[ -f config/certs/es01/es01.crt ]']
       interval: 1s
       timeout: 5s
       retries: 120
@@ -99,7 +99,7 @@ services:
     healthcheck:
       test:
         [
-          "CMD-SHELL",
+          'CMD-SHELL',
           "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
         ]
       interval: 10s
@@ -139,7 +139,7 @@ services:
     healthcheck:
       test:
         [
-          "CMD-SHELL",
+          'CMD-SHELL',
           "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
         ]
       interval: 10s
@@ -179,7 +179,7 @@ services:
     healthcheck:
       test:
         [
-          "CMD-SHELL",
+          'CMD-SHELL',
           "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
         ]
       interval: 10s
@@ -210,7 +210,7 @@ services:
     healthcheck:
       test:
         [
-          "CMD-SHELL",
+          'CMD-SHELL',
           "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
         ]
       interval: 10s

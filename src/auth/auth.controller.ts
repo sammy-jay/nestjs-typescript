@@ -12,13 +12,18 @@ import {
 import { AuthService } from './auth.service';
 import { Address, RegistrationDto } from './dto';
 import { JwtGuard } from './guard/jwt.guard';
+import { JwtRefreshGuard } from './guard/jwt-refresh.guard';
 import { LocalGuard } from './guard/local.guard';
 import { RequestUser } from './interface/request-user.interface';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @HttpCode(200)
   @UseGuards(JwtGuard)
@@ -41,17 +46,37 @@ export class AuthController {
   async login(@Req() request: RequestUser) {
     const user = request.user;
     delete user.password;
-    const cookie = this.authService.getCookieWithJwtToken(user.id, user.email);
-    request.res.setHeader('Set-Cookie', cookie);
+    const accessTokenCookie = this.authService.getCookieWithJwtToken(
+      user.id,
+      user.email,
+    );
+    const { refreshTokenCookie, refreshToken } =
+      await this.authService.getCookieWithJwtRefreshToken(user.id, user.email);
+    await this.usersService.setCurrentRefreshToken(refreshToken, user.id);
+    request.res.setHeader('Set-Cookie', [
+      accessTokenCookie,
+      refreshTokenCookie,
+    ]);
     return user;
   }
+  @UseGuards(JwtRefreshGuard)
+  @Get('refresh')
+  refresh(@Req() request: RequestUser) {
+    const user = request.user;
+    delete user.password;
+    const accessTokenCookie = this.authService.getCookieWithJwtToken(
+      user.id,
+      user.email,
+    );
 
+    request.res.setHeader('Set-Cookie', accessTokenCookie);
+    return user;
+  }
   @HttpCode(200)
   @UseGuards(JwtGuard)
   @Get('logout')
   async logout(@Req() request: RequestUser) {
-    const cookie = this.authService.getCookieForLogout();
-    request.res.setHeader('Set-Cookie', cookie);
-    return;
+    await this.usersService.removeRefreshToken(request.user.id);
+    request.res.setHeader('Set-Cookie', this.authService.getCookiesForLogout());
   }
 }

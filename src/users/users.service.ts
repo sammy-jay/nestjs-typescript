@@ -4,12 +4,14 @@ import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PrivateFilesService } from 'src/private-files/private-files.service';
 import { PublicFilesService } from 'src/public-files/public-files.service';
-import { Repository } from 'typeorm';
+import { Repository, Connection } from 'typeorm';
 import { CreateUserDto } from './dto';
+import * as bcrypt from 'bcrypt';
 import Address from './entity/address.entity';
 import User from './entity/user.entity';
 
@@ -21,6 +23,7 @@ export class UsersService {
     private readonly addressRepository: Repository<Address>,
     private readonly publicFilesService: PublicFilesService,
     private readonly privateFilesService: PrivateFilesService,
+    private readonly connection: Connection,
   ) {}
 
   async getByEmail(email: string) {
@@ -79,13 +82,29 @@ export class UsersService {
   }
 
   async deleteUserAvatar(user: User) {
+    const queryRunner = this.connection.createQueryRunner();
+
     const fileId = user.avatar?.id;
     if (fileId) {
-      await this.usersRepository.update(user.id, {
-        ...user,
-        avatar: null,
-      });
-      await this.publicFilesService.deletePublicFile(fileId);
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+
+      try {
+        await queryRunner.manager.update(User, user.id, {
+          ...user,
+          avatar: null,
+        });
+        await this.publicFilesService.deletePublicFileWithQueryRunner(
+          fileId,
+          queryRunner,
+        );
+        await queryRunner.commitTransaction();
+      } catch (error) {
+        await queryRunner.rollbackTransaction();
+        throw new InternalServerErrorException();
+      } finally {
+        await queryRunner.release();
+      }
     }
   }
 
@@ -124,5 +143,31 @@ export class UsersService {
       );
     }
     throw new NotFoundException('User with id ' + userId + ' not found.');
+  }
+
+  async setCurrentRefreshToken(refreshToken: string, userId: number) {
+    const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    await this.usersRepository.update(userId, {
+      currentHashedRefreshToken,
+    });
+  }
+
+  async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
+    const user = await this.getById(userId);
+
+    const isRefreshTokenMatching = await bcrypt.compare(
+      refreshToken,
+      user.currentHashedRefreshToken,
+    );
+
+    if (isRefreshTokenMatching) {
+      return user;
+    }
+  }
+
+  async removeRefreshToken(userId: number) {
+    return this.usersRepository.update(userId, {
+      currentHashedRefreshToken: null,
+    });
   }
 }

@@ -11,6 +11,7 @@ import { DatabaseModule } from './database/database.module';
 import { PublicFilesModule } from './public-files/public-files.module';
 import { PrivateFilesModule } from './private-files/private-files.module';
 import { SearchModule } from './search/search.module';
+import { SubscribersModule } from './subscribers/subscribers.module';
 
 @Module({
   imports: [
@@ -22,8 +23,12 @@ import { SearchModule } from './search/search.module';
         POSTGRES_USER: Joi.string().required(),
         POSTGRES_PASSWORD: Joi.string().required(),
         POSTGRES_DB: Joi.string().required(),
-        JWT_SECRET: Joi.string().required(),
-        JWT_EXPIRATION_TIME: Joi.string().required(),
+        JWT_ACCESS_TOKEN_SECRET: Joi.string().required(),
+        JWT_ACCESS_TOKEN_EXPIRATION_TIME: Joi.string().required(),
+        JWT_REFRESH_TOKEN_SECRET: Joi.string().required(),
+        JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().required(),
+        SUBSCRIBERS_SERVICE_HOST: Joi.string().required(),
+        SUBSCRIBERS_SERVICE_PORT: Joi.number().required(),
         PORT: Joi.number(),
       }),
     }),
@@ -34,6 +39,7 @@ import { SearchModule } from './search/search.module';
     PublicFilesModule,
     PrivateFilesModule,
     SearchModule,
+    SubscribersModule,
   ],
   providers: [
     {
