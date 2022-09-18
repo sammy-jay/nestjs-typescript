@@ -11,6 +11,7 @@ services:
       - docker.env
     networks:
       - postgres
+
   pgadmin:
     links:
       - postgres:postgres
@@ -24,6 +25,7 @@ services:
       - docker.env
     networks:
       - postgres
+
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.4.1
     container_name: es01
