@@ -34,25 +34,25 @@ export class SubscribersController {
 
   @Post()
   async addSubscriber(@Body() subscriber: CreateSubscriberDto) {
-    return await this.subscribersClient.emit(
-      {
-        cmd: 'add-subscriber',
-      },
-      subscriber,
-    );
+    try {
+      return await this.subscribersClient.send(
+        {
+          cmd: 'add-subscriber',
+        },
+        subscriber,
+      );
+    } catch (error) {
+      return error;
+    }
   }
 
   //   @Post()
   //   async addSubscriber(@Body() subscriber: CreateSubscriberDto) {
-  //     try {
-  //       return await this.subscribersClient.send(
-  //         {
-  //           cmd: 'add-subscriber',
-  //         },
-  //         subscriber,
-  //       );
-  //     } catch (error) {
-  //       return error;
-  //     }
+  //     return await this.subscribersClient.emit(
+  //       {
+  //         cmd: 'add-subscriber',
+  //       },
+  //       subscriber,
+  //     );
   //   }
 }
