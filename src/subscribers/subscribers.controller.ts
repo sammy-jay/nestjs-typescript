@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Inject,
-  InternalServerErrorException,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, UseGuards } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
