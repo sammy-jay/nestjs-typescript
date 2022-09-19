@@ -56,8 +56,6 @@ export class PostsService {
       categories: [{ ...post.categories }],
     });
     await this.postsRepository.save(newPost);
-    console.log(newPost);
-    delete newPost.author;
     return newPost;
   }
 

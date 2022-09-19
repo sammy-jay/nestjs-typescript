@@ -12,6 +12,7 @@ import { PublicFilesModule } from './public-files/public-files.module';
 import { PrivateFilesModule } from './private-files/private-files.module';
 import { SearchModule } from './search/search.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { SubscribersModule } from './subscribers/subscribers.module';
     PrivateFilesModule,
     SearchModule,
     SubscribersModule,
+    CommentsModule,
   ],
   providers: [
     {
