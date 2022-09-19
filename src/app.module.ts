@@ -13,6 +13,7 @@ import { PrivateFilesModule } from './private-files/private-files.module';
 import { SearchModule } from './search/search.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { CommentsModule } from './comments/comments.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -32,6 +33,9 @@ import { CommentsModule } from './comments/comments.module';
         SUBSCRIBERS_SERVICE_PORT: Joi.number().required(),
         REDIS_HOST: Joi.string().required(),
         REDIS_PORT: Joi.number().required(),
+        EMAIL_SERVICE: Joi.string().required(),
+        EMAIL_USER: Joi.string().required(),
+        EMAIL_PASSWORD: Joi.string().required(),
         PORT: Joi.number(),
       }),
     }),
@@ -44,6 +48,7 @@ import { CommentsModule } from './comments/comments.module';
     SearchModule,
     SubscribersModule,
     CommentsModule,
+    EmailModule,
   ],
   providers: [
     {

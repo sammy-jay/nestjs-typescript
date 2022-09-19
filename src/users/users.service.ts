@@ -14,6 +14,7 @@ import { CreateUserDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import Address from './entity/address.entity';
 import User from './entity/user.entity';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class UsersService {
@@ -23,6 +24,7 @@ export class UsersService {
     private readonly addressRepository: Repository<Address>,
     private readonly publicFilesService: PublicFilesService,
     private readonly privateFilesService: PrivateFilesService,
+    private readonly emailService: EmailService,
     private readonly dataSource: DataSource,
   ) {}
 
@@ -57,6 +59,14 @@ export class UsersService {
       ...userData,
     });
     await this.usersRepository.save(newUser);
+    console.log('first');
+    await this.emailService.sendMail({
+      from: '"My App" <my-app@gmail.com>',
+      to: newUser.email,
+      subject: 'New User Created',
+      html: '<h2>Thank you for registering</h2>',
+    });
+    console.log('second');
     return newUser;
   }
 
