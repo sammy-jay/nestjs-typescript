@@ -59,14 +59,6 @@ export class UsersService {
       ...userData,
     });
     await this.usersRepository.save(newUser);
-    console.log('first');
-    await this.emailService.sendMail({
-      from: '"My App" <my-app@gmail.com>',
-      to: newUser.email,
-      subject: 'New User Created',
-      html: '<h2>Thank you for registering</h2>',
-    });
-    console.log('second');
     return newUser;
   }
 

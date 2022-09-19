@@ -14,10 +14,13 @@ import { SearchModule } from './search/search.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { CommentsModule } from './comments/comments.module';
 import { EmailModule } from './email/email.module';
+import { EmailSchedulingModule } from './email-scheduling/email-scheduling.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     PostsModule,
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         POSTGRES_HOST: Joi.string().required(),
@@ -34,6 +37,7 @@ import { EmailModule } from './email/email.module';
         REDIS_HOST: Joi.string().required(),
         REDIS_PORT: Joi.number().required(),
         EMAIL_SERVICE: Joi.string().required(),
+        EMAIL_PORT: Joi.number().required(),
         EMAIL_USER: Joi.string().required(),
         EMAIL_PASSWORD: Joi.string().required(),
         PORT: Joi.number(),
@@ -49,6 +53,7 @@ import { EmailModule } from './email/email.module';
     SubscribersModule,
     CommentsModule,
     EmailModule,
+    EmailSchedulingModule,
   ],
   providers: [
     {

@@ -10,14 +10,21 @@ export class EmailService {
   constructor(private readonly configService: ConfigService) {
     this.nodemailerTransport = createTransport({
       service: configService.get('EMAIL_SERVICE'),
+      port: configService.get('EMAIL_PORT'),
       auth: {
         user: configService.get('EMAIL_USER'),
         pass: configService.get('EMAIL_PASSWORD'),
       },
+      secure: true,
     });
   }
 
-  async sendMail(options: Mail.Options) {
-    return await this.nodemailerTransport.sendMail(options);
+  sendMail(options: Mail.Options) {
+    return this.nodemailerTransport.sendMail(options, (err, info) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log(info);
+    });
   }
 }
