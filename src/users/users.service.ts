@@ -9,7 +9,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { PrivateFilesService } from 'src/private-files/private-files.service';
 import { PublicFilesService } from 'src/public-files/public-files.service';
-import { Repository, Connection } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { CreateUserDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import Address from './entity/address.entity';
@@ -23,7 +23,7 @@ export class UsersService {
     private readonly addressRepository: Repository<Address>,
     private readonly publicFilesService: PublicFilesService,
     private readonly privateFilesService: PrivateFilesService,
-    private readonly connection: Connection,
+    private readonly dataSource: DataSource,
   ) {}
 
   async getByEmail(email: string) {
@@ -82,7 +82,7 @@ export class UsersService {
   }
 
   async deleteUserAvatar(user: User) {
-    const queryRunner = this.connection.createQueryRunner();
+    const queryRunner = this.dataSource.createQueryRunner();
 
     const fileId = user.avatar?.id;
     if (fileId) {

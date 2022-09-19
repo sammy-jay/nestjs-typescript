@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { join } from 'path';
 import { SubscribersController } from './subscribers.controller';
 
 @Module({
@@ -8,22 +9,18 @@ import { SubscribersController } from './subscribers.controller';
   controllers: [SubscribersController],
   providers: [
     {
-      provide: 'SUBSCRIBERS_SERVICE',
+      provide: 'SUBSCRIBERS_PACKAGE',
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const user = configService.get('RABBITMQ_USER');
-        const password = configService.get('RABBITMQ_PASSWORD');
-        const host = configService.get('RABBITMQ_HOST');
-        const queueName = configService.get('RABBITMQ_QUEUE_NAME');
-
         return ClientProxyFactory.create({
-          transport: Transport.RMQ,
+          transport: Transport.GRPC,
           options: {
-            urls: [`amqp://${user}:${password}@${host}`],
-            queue: queueName,
-            queueOptions: {
-              durable: true,
-            },
+            package: 'subscribers',
+            protoPath: join(
+              process.cwd(),
+              'src/subscribers/proto/subscribers.proto',
+            ),
+            url: configService.get('GRPC_CONNECTION_URL'),
           },
         });
       },
