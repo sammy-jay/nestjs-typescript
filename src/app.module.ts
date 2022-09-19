@@ -30,6 +30,8 @@ import { CommentsModule } from './comments/comments.module';
         JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().required(),
         SUBSCRIBERS_SERVICE_HOST: Joi.string().required(),
         SUBSCRIBERS_SERVICE_PORT: Joi.number().required(),
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.number().required(),
         PORT: Joi.number(),
       }),
     }),

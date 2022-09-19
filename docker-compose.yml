@@ -26,6 +26,20 @@ services:
     networks:
       - postgres
 
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+        - redis
+
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.4.1
     container_name: es01
