@@ -12,6 +12,7 @@ import Address from './address.entity';
 import Post from '../../posts/entity/post.entity';
 import PublicFile from 'src/public-files/entity/public-file.entity';
 import PrivateFile from 'src/private-files/entity/private-file.entity';
+import Message from 'src/chat/entity/message.entity';
 
 @Entity()
 class User {
@@ -48,6 +49,9 @@ class User {
 
   @OneToMany(() => PrivateFile, (privateFile: PrivateFile) => privateFile.owner)
   public files: PrivateFile[];
+
+  @OneToMany(() => Message, (message: Message) => message.author)
+  public messages: Message[];
 }
 
 export default User;
