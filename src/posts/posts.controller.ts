@@ -1,5 +1,6 @@
 import {
   Body,
+  CacheInterceptor,
   Controller,
   Delete,
   Get,
@@ -11,6 +12,7 @@ import {
   Req,
   UseFilters,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { RequestUser } from 'src/auth/interface/request-user.interface';
@@ -28,6 +30,7 @@ export class PostsController {
 
   @Get()
   @HttpCode(200)
+  @UseInterceptors(CacheInterceptor)
   getAllPosts(
     @Query('paragraph') paragraph: string,
     @Query() { offset, limit }: PaginationParams,
