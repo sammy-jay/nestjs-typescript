@@ -9,7 +9,7 @@ export class CreatePostDto {
   @IsNotEmpty()
   title: string;
 
-  @IsObject()
-  @IsOptional()
-  categories: any;
+  // @IsObject()
+  // @IsOptional()
+  // categories: any;
 }

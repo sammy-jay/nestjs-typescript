@@ -7,6 +7,7 @@ import { SearchModule } from 'src/search/search.module';
 import PostsSearchService from './post-search.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as redisStore from 'cache-manager-redis-store';
+import { PostsResolver } from './post.resolver';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import * as redisStore from 'cache-manager-redis-store';
     TypeOrmModule.forFeature([Post]),
     SearchModule,
   ],
-  providers: [PostsService, PostsSearchService],
+  providers: [PostsService, PostsSearchService, PostsResolver],
   controllers: [PostsController],
 })
 export class PostsModule {}

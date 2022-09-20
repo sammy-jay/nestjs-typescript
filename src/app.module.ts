@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
@@ -17,11 +17,19 @@ import { EmailModule } from './email/email.module';
 import { EmailSchedulingModule } from './email-scheduling/email-scheduling.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ChatModule } from './chat/chat.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver } from '@nestjs/apollo';
+import { join } from 'path';
+import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 
 @Module({
   imports: [
-    PostsModule,
-    ScheduleModule.forRoot(),
+    GraphQLModule.forRoot({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
+      playground: false,
+      plugins: [ApolloServerPluginLandingPageLocalDefault],
+    }),
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         POSTGRES_HOST: Joi.string().required(),
@@ -44,6 +52,8 @@ import { ChatModule } from './chat/chat.module';
         PORT: Joi.number(),
       }),
     }),
+    PostsModule,
+    ScheduleModule.forRoot(),
     DatabaseModule,
     UsersModule,
     AuthModule,

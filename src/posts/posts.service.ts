@@ -53,7 +53,7 @@ export class PostsService {
     const newPost = await this.postsRepository.create({
       ...post,
       author: user,
-      categories: [{ ...post.categories }],
+      // categories: [{ ...post.categories }],
     });
     await this.postsRepository.save(newPost);
     return newPost;
