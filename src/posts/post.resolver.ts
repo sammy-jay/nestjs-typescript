@@ -3,7 +3,7 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphqlJwtGuard } from 'src/auth/guard/graphql-jwt.guard';
 import { RequestUser } from 'src/auth/interface/request-user.interface';
 import { CreatePostInput } from './input/post.input';
-import { Post } from './model/post.model';
+import { Post } from './models/post.model';
 import { PostsService } from './posts.service';
 
 @Resolver(() => Post)

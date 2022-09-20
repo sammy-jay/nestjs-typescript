@@ -33,6 +33,13 @@ class User {
   @Exclude()
   public currentHashedRefreshToken?: string;
 
+  @Exclude()
+  @Column({ nullable: true })
+  public twoFactorAuthenticationSecret?: string;
+
+  @Column({ default: false })
+  public isTwoFactorAuthenticationEnabled: boolean;
+
   @JoinColumn()
   @OneToOne(() => Address, { eager: true, cascade: true })
   public address: Relation<Address>;

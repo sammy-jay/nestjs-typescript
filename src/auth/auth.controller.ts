@@ -46,17 +46,18 @@ export class AuthController {
   async login(@Req() request: RequestUser) {
     const user = request.user;
     delete user.password;
-    const accessTokenCookie = this.authService.getCookieWithJwtToken(
-      user.id,
-      user.email,
-    );
+    const accessTokenCookie = this.authService.getCookieWithJwtToken(user.id);
     const { refreshTokenCookie, refreshToken } =
-      await this.authService.getCookieWithJwtRefreshToken(user.id, user.email);
+      await this.authService.getCookieWithJwtRefreshToken(user.id);
     await this.usersService.setCurrentRefreshToken(refreshToken, user.id);
     request.res.setHeader('Set-Cookie', [
       accessTokenCookie,
       refreshTokenCookie,
     ]);
+    if (user.isTwoFactorAuthenticationEnabled) {
+      return user;
+    }
+
     return user;
   }
   @UseGuards(JwtRefreshGuard)
@@ -64,19 +65,17 @@ export class AuthController {
   refresh(@Req() request: RequestUser) {
     const user = request.user;
     delete user.password;
-    const accessTokenCookie = this.authService.getCookieWithJwtToken(
-      user.id,
-      user.email,
-    );
+    const accessTokenCookie = this.authService.getCookieWithJwtToken(user.id);
 
     request.res.setHeader('Set-Cookie', accessTokenCookie);
     return user;
   }
-  @HttpCode(200)
+  @HttpCode(204)
   @UseGuards(JwtGuard)
   @Get('logout')
   async logout(@Req() request: RequestUser) {
     await this.usersService.removeRefreshToken(request.user.id);
+    // await this.usersService.turnOffTwoFactorAuthentication(request.user.id);
     request.res.setHeader('Set-Cookie', this.authService.getCookiesForLogout());
   }
 }

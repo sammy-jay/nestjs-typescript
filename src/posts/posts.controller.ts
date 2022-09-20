@@ -14,6 +14,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import JwtTwoFactorGuard from 'src/auth/guard/jwt-two-factor.guard';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { RequestUser } from 'src/auth/interface/request-user.interface';
 import { ExceptionLoggerFilter } from 'src/utils/exceptions-logger.filter';
@@ -57,6 +58,7 @@ export class PostsController {
 
   @Post()
   @HttpCode(201)
+  @UseGuards(JwtTwoFactorGuard)
   async createPost(@Body() post: CreatePostDto, @Req() req: RequestUser) {
     return this.postsService.createPost(post, req.user);
   }
