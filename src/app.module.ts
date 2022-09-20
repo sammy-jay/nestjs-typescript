@@ -21,6 +21,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver } from '@nestjs/apollo';
 import { join } from 'path';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
+import { BullModule } from '@nestjs/bull';
+import { OptimizeModule } from './optimize/optimize.module';
 
 @Module({
   imports: [
@@ -29,6 +31,16 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
       autoSchemaFile: true,
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault],
+    }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        redis: {
+          host: configService.get('REDIS_HOST'),
+          port: Number(configService.get('REDIS_PORT')),
+        },
+      }),
     }),
     ConfigModule.forRoot({
       validationSchema: Joi.object({
@@ -49,6 +61,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
         EMAIL_PORT: Joi.number().required(),
         EMAIL_USER: Joi.string().required(),
         EMAIL_PASSWORD: Joi.string().required(),
+        TWO_FACTOR_AUTHENTICATION_APP_NAME: Joi.string().required(),
         PORT: Joi.number(),
       }),
     }),
@@ -66,6 +79,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
     EmailModule,
     EmailSchedulingModule,
     ChatModule,
+    OptimizeModule,
   ],
   providers: [
     {
