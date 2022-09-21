@@ -25,6 +25,7 @@ import { BullModule } from '@nestjs/bull';
 import { OptimizeModule } from './optimize/optimize.module';
 import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { SmsModule } from './sms/sms.module';
 
 @Module({
   imports: [
@@ -78,6 +79,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
         TWILIO_ACCOUNT_SID: Joi.string().required(),
         TWILIO_AUTH_TOKEN: Joi.string().required(),
         TWILIO_VERIFICATION_SERVICE_SID: Joi.string().required(),
+        TWILIO_SENDER_PHONE_NUMBER: Joi.string().required(),
         PORT: Joi.number(),
       }),
     }),
@@ -97,6 +99,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     ChatModule,
     OptimizeModule,
     EmailConfirmationModule,
+    SmsModule,
   ],
   providers: [
     {

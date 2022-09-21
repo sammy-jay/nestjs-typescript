@@ -3,7 +3,7 @@ import {
   IsEmail,
   IsNotEmpty,
   MinLength,
-  IsOptional,
+  Matches,
   IsObject,
 } from 'class-validator';
 
@@ -33,6 +33,11 @@ export class RegistrationDto {
   @IsNotEmpty()
   @MinLength(7)
   password: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @Matches(/^\+[1-9]\d{11,14}$/)
+  phoneNumber: string;
 
   @IsNotEmpty()
   @IsObject()

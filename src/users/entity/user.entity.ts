@@ -43,6 +43,12 @@ class User {
   @Column({ default: false })
   public isEmailConfirmed: boolean;
 
+  @Column()
+  public phoneNumber: string;
+
+  @Column({ default: false })
+  public isPhoneNumberConfirmed: boolean;
+
   @JoinColumn()
   @OneToOne(() => Address, { eager: true, cascade: true })
   public address: Relation<Address>;

@@ -199,4 +199,13 @@ export class UsersService {
       },
     );
   }
+
+  async markPhoneNumberAsConfirmed(id: number) {
+    return await this.usersRepository.update(
+      { id },
+      {
+        isPhoneNumberConfirmed: true,
+      },
+    );
+  }
 }
