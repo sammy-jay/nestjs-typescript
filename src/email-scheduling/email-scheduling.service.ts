@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { EmailService } from 'src/email/email.service';
@@ -13,6 +13,12 @@ export class EmailSchedulingService {
 
   scheduleEmail(emailSchedule: EmailScheduleDto) {
     const date = new Date(emailSchedule.date);
+
+    if (date.getTime() <= new Date().getTime()) {
+      console.log('True');
+      throw new BadRequestException('Date already in the past.');
+    }
+
     const job = new CronJob(date, () => {
       this.emailService.sendMail({
         to: emailSchedule.recipient,
@@ -20,7 +26,7 @@ export class EmailSchedulingService {
         text: emailSchedule.content,
       });
     });
-
+    console.log(job);
     this.schedulerRegistry.addCronJob(
       `${Date.now()}-${emailSchedule.subject}`,
       job,

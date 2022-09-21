@@ -23,6 +23,8 @@ import { join } from 'path';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { BullModule } from '@nestjs/bull';
 import { OptimizeModule } from './optimize/optimize.module';
+import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -31,6 +33,14 @@ import { OptimizeModule } from './optimize/optimize.module';
       autoSchemaFile: true,
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault],
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: 'localhost',
+        port: 1025,
+        ignoreTLS: true,
+        secure: false,
+      },
     }),
     BullModule.forRootAsync({
       imports: [ConfigModule],
@@ -61,7 +71,13 @@ import { OptimizeModule } from './optimize/optimize.module';
         EMAIL_PORT: Joi.number().required(),
         EMAIL_USER: Joi.string().required(),
         EMAIL_PASSWORD: Joi.string().required(),
+        JWT_VERIFICATION_TOKEN_SECRET: Joi.string().required(),
+        JWT_VERIFICATION_TOKEN_EXPIRATION_TIME: Joi.string().required(),
+        EMAIL_CONFIRMATION_URL: Joi.string().required(),
         TWO_FACTOR_AUTHENTICATION_APP_NAME: Joi.string().required(),
+        TWILIO_ACCOUNT_SID: Joi.string().required(),
+        TWILIO_AUTH_TOKEN: Joi.string().required(),
+        TWILIO_VERIFICATION_SERVICE_SID: Joi.string().required(),
         PORT: Joi.number(),
       }),
     }),
@@ -80,6 +96,7 @@ import { OptimizeModule } from './optimize/optimize.module';
     EmailSchedulingModule,
     ChatModule,
     OptimizeModule,
+    EmailConfirmationModule,
   ],
   providers: [
     {

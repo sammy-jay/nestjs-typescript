@@ -40,6 +40,13 @@ services:
     depends_on:
         - redis
 
+  mailhog:
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'
+    ports:
+      - "1025:1025"
+      - "8025:8025"
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.4.1
     container_name: es01
