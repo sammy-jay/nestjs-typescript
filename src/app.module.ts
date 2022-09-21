@@ -19,7 +19,6 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ChatModule } from './chat/chat.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver } from '@nestjs/apollo';
-import { join } from 'path';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { BullModule } from '@nestjs/bull';
 import { OptimizeModule } from './optimize/optimize.module';
@@ -49,7 +48,7 @@ import { SmsModule } from './sms/sms.module';
       useFactory: async (configService: ConfigService) => ({
         redis: {
           host: configService.get('REDIS_HOST'),
-          port: Number(configService.get('REDIS_PORT')),
+          port: configService.get('REDIS_PORT'),
         },
       }),
     }),

@@ -1,8 +1,29 @@
 version: '3.8'
 services:
+  server:
+    container_name: server
+    build:
+      dockerfile: ./Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/server
+    depends_on:
+      - postgres
+
+  client:
+    container_name: client
+    build:
+      dockerfile: ./client/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client/:/client
+
   postgres:
     container_name: postgres
     image: postgres:14
+    restart: always
     ports:
       - '5432:5432'
     volumes:
