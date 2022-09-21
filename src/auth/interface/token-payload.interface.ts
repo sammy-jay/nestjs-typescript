@@ -1,4 +1,4 @@
 export interface TokenPayload {
   id: number;
-  email: string;
+  is2FAunthenticated: boolean;
 }

@@ -70,7 +70,6 @@ export class UsersController {
     @Param() { id }: FindOneParams,
     @Res() response: Response,
   ) {
-    console.log(request.user);
     const file = await this.usersService.getPrivateFile(
       request.user.id,
       Number(id),
@@ -80,7 +79,6 @@ export class UsersController {
 
   @Get('files')
   async getAllPrivateFiles(@Req() request: RequestUser) {
-    console.log(request.user);
     return this.usersService.getAllPrivateFiles(request.user.id);
   }
 }

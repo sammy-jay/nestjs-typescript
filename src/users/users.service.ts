@@ -9,11 +9,12 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { PrivateFilesService } from 'src/private-files/private-files.service';
 import { PublicFilesService } from 'src/public-files/public-files.service';
-import { Repository, Connection } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { CreateUserDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import Address from './entity/address.entity';
 import User from './entity/user.entity';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class UsersService {
@@ -23,7 +24,8 @@ export class UsersService {
     private readonly addressRepository: Repository<Address>,
     private readonly publicFilesService: PublicFilesService,
     private readonly privateFilesService: PrivateFilesService,
-    private readonly connection: Connection,
+    private readonly emailService: EmailService,
+    private readonly dataSource: DataSource,
   ) {}
 
   async getByEmail(email: string) {
@@ -82,7 +84,7 @@ export class UsersService {
   }
 
   async deleteUserAvatar(user: User) {
-    const queryRunner = this.connection.createQueryRunner();
+    const queryRunner = this.dataSource.createQueryRunner();
 
     const fileId = user.avatar?.id;
     if (fileId) {
@@ -169,5 +171,41 @@ export class UsersService {
     return this.usersRepository.update(userId, {
       currentHashedRefreshToken: null,
     });
+  }
+
+  async setTwoFactorAuthenticationSecret(secret: string, userId: number) {
+    return this.usersRepository.update(userId, {
+      twoFactorAuthenticationSecret: secret,
+    });
+  }
+
+  async turnOnTwoFactorAuthentication(userId: number) {
+    return this.usersRepository.update(userId, {
+      isTwoFactorAuthenticationEnabled: true,
+    });
+  }
+
+  async turnOffTwoFactorAuthentication(userId: number) {
+    return this.usersRepository.update(userId, {
+      isTwoFactorAuthenticationEnabled: false,
+    });
+  }
+
+  async markEmailAsConfirmed(email: string) {
+    return await this.usersRepository.update(
+      { email },
+      {
+        isEmailConfirmed: true,
+      },
+    );
+  }
+
+  async markPhoneNumberAsConfirmed(id: number) {
+    return await this.usersRepository.update(
+      { id },
+      {
+        isPhoneNumberConfirmed: true,
+      },
+    );
   }
 }

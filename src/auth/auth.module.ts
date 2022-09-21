@@ -7,6 +7,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { JwtRefreshStrategy } from './strategy/jwt-refresh.strategy';
+import { TwoFactorAuthModule } from './two-factor-auth/two-factor-auth.module';
+import { JwtTwoFactorStrategy } from './strategy/jwt-two-factor.strategy';
+import { EmailConfirmationModule } from 'src/email-confirmation/email-confirmation.module';
 
 @Module({
   imports: [
@@ -22,8 +25,16 @@ import { JwtRefreshStrategy } from './strategy/jwt-refresh.strategy';
         },
       }),
     }),
+    TwoFactorAuthModule,
+    EmailConfirmationModule,
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    JwtRefreshStrategy,
+    JwtTwoFactorStrategy,
+  ],
   controllers: [AuthController],
   exports: [AuthService],
 })

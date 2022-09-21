@@ -1,5 +1,6 @@
 import {
   Body,
+  CacheInterceptor,
   Controller,
   Delete,
   Get,
@@ -11,9 +12,12 @@ import {
   Req,
   UseFilters,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import JwtTwoFactorGuard from 'src/auth/guard/jwt-two-factor.guard';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { RequestUser } from 'src/auth/interface/request-user.interface';
+import { EmailConfirmationGuard } from 'src/email-confirmation/guard/email-confirmation.guard';
 import { ExceptionLoggerFilter } from 'src/utils/exceptions-logger.filter';
 import { FindOneParams } from 'src/utils/find-one.params';
 import { PaginationParams } from 'src/utils/pagination.params';
@@ -28,6 +32,7 @@ export class PostsController {
 
   @Get()
   @HttpCode(200)
+  @UseInterceptors(CacheInterceptor)
   getAllPosts(
     @Query('paragraph') paragraph: string,
     @Query() { offset, limit }: PaginationParams,
@@ -54,6 +59,8 @@ export class PostsController {
 
   @Post()
   @HttpCode(201)
+  @UseGuards(EmailConfirmationGuard)
+  @UseGuards(JwtTwoFactorGuard)
   async createPost(@Body() post: CreatePostDto, @Req() req: RequestUser) {
     return this.postsService.createPost(post, req.user);
   }

@@ -1,8 +1,29 @@
 version: '3.8'
 services:
+  server:
+    container_name: server
+    build:
+      dockerfile: ./Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/server
+    depends_on:
+      - postgres
+
+  client:
+    container_name: client
+    build:
+      dockerfile: ./client/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client/:/client
+
   postgres:
     container_name: postgres
     image: postgres:14
+    restart: always
     ports:
       - '5432:5432'
     volumes:
@@ -11,6 +32,7 @@ services:
       - docker.env
     networks:
       - postgres
+
   pgadmin:
     links:
       - postgres:postgres
@@ -24,6 +46,28 @@ services:
       - docker.env
     networks:
       - postgres
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+        - redis
+
+  mailhog:
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'
+    ports:
+      - "1025:1025"
+      - "8025:8025"
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.4.1
     container_name: es01

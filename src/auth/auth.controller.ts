@@ -16,6 +16,7 @@ import { JwtRefreshGuard } from './guard/jwt-refresh.guard';
 import { LocalGuard } from './guard/local.guard';
 import { RequestUser } from './interface/request-user.interface';
 import { UsersService } from 'src/users/users.service';
+import { EmailConfirmationService } from 'src/email-confirmation/email-confirmation.service';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -23,6 +24,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
+    private readonly emailConfirmationService: EmailConfirmationService,
   ) {}
 
   @HttpCode(200)
@@ -37,7 +39,11 @@ export class AuthController {
     @Body() registrationData: RegistrationDto,
     @Body('address') address: Address,
   ) {
-    return await this.authService.register(registrationData);
+    const user = await this.authService.register(registrationData);
+    if (user) {
+      await this.emailConfirmationService.sendVerificationLink(user.email);
+    }
+    return user;
   }
 
   @HttpCode(200)
@@ -46,17 +52,18 @@ export class AuthController {
   async login(@Req() request: RequestUser) {
     const user = request.user;
     delete user.password;
-    const accessTokenCookie = this.authService.getCookieWithJwtToken(
-      user.id,
-      user.email,
-    );
+    const accessTokenCookie = this.authService.getCookieWithJwtToken(user.id);
     const { refreshTokenCookie, refreshToken } =
-      await this.authService.getCookieWithJwtRefreshToken(user.id, user.email);
+      await this.authService.getCookieWithJwtRefreshToken(user.id);
     await this.usersService.setCurrentRefreshToken(refreshToken, user.id);
     request.res.setHeader('Set-Cookie', [
       accessTokenCookie,
       refreshTokenCookie,
     ]);
+    if (user.isTwoFactorAuthenticationEnabled) {
+      return user;
+    }
+
     return user;
   }
   @UseGuards(JwtRefreshGuard)
@@ -64,19 +71,17 @@ export class AuthController {
   refresh(@Req() request: RequestUser) {
     const user = request.user;
     delete user.password;
-    const accessTokenCookie = this.authService.getCookieWithJwtToken(
-      user.id,
-      user.email,
-    );
+    const accessTokenCookie = this.authService.getCookieWithJwtToken(user.id);
 
     request.res.setHeader('Set-Cookie', accessTokenCookie);
     return user;
   }
-  @HttpCode(200)
+  @HttpCode(204)
   @UseGuards(JwtGuard)
   @Get('logout')
   async logout(@Req() request: RequestUser) {
     await this.usersService.removeRefreshToken(request.user.id);
+    // await this.usersService.turnOffTwoFactorAuthentication(request.user.id);
     request.res.setHeader('Set-Cookie', this.authService.getCookiesForLogout());
   }
 }

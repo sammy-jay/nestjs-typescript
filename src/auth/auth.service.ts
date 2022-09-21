@@ -61,8 +61,8 @@ export class AuthService {
     }
   }
 
-  getCookieWithJwtToken(id: number, email: string) {
-    const payload: TokenPayload = { id, email };
+  getCookieWithJwtToken(id: number, is2FAunthenticated = false) {
+    const payload: TokenPayload = { id, is2FAunthenticated };
     const expTime = this.configService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME');
     const token = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
@@ -71,8 +71,8 @@ export class AuthService {
     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${expTime}`;
   }
 
-  async getCookieWithJwtRefreshToken(id: number, email: string) {
-    const payload: TokenPayload = { id, email };
+  async getCookieWithJwtRefreshToken(id: number, is2FAunthenticated = false) {
+    const payload: TokenPayload = { id, is2FAunthenticated };
     const expTime = this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME');
     const refreshToken = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
@@ -91,5 +91,14 @@ export class AuthService {
       'Authentication=; HttpOnly; Path=/; Max-Age=0',
       'Refresh=; HttpOnly; Path=/; Max-Age=0',
     ];
+  }
+
+  async getUserFromAuthenticationToken(token: string) {
+    const payload: TokenPayload = this.jwtService.verify(token, {
+      secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
+    });
+    if (payload.id) {
+      return this.usersService.getById(payload.id);
+    }
   }
 }

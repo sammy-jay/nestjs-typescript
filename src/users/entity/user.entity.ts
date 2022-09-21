@@ -12,6 +12,7 @@ import Address from './address.entity';
 import Post from '../../posts/entity/post.entity';
 import PublicFile from 'src/public-files/entity/public-file.entity';
 import PrivateFile from 'src/private-files/entity/private-file.entity';
+import Message from 'src/chat/entity/message.entity';
 
 @Entity()
 class User {
@@ -32,6 +33,22 @@ class User {
   @Exclude()
   public currentHashedRefreshToken?: string;
 
+  @Exclude()
+  @Column({ nullable: true })
+  public twoFactorAuthenticationSecret?: string;
+
+  @Column({ default: false })
+  public isTwoFactorAuthenticationEnabled: boolean;
+
+  @Column({ default: false })
+  public isEmailConfirmed: boolean;
+
+  @Column()
+  public phoneNumber: string;
+
+  @Column({ default: false })
+  public isPhoneNumberConfirmed: boolean;
+
   @JoinColumn()
   @OneToOne(() => Address, { eager: true, cascade: true })
   public address: Relation<Address>;
@@ -48,6 +65,9 @@ class User {
 
   @OneToMany(() => PrivateFile, (privateFile: PrivateFile) => privateFile.owner)
   public files: PrivateFile[];
+
+  @OneToMany(() => Message, (message: Message) => message.author)
+  public messages: Message[];
 }
 
 export default User;
