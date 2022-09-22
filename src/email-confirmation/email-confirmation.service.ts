@@ -32,7 +32,7 @@ export class EmailConfirmationService {
 
     const filepath = join(
       __dirname,
-      '../../src/email/template/email-verification.template.html',
+      '../../dist/email/template/email-verification.template.html',
     );
     const source = fs.readFileSync(filepath, 'utf8').toString();
     const template = handlebars.compile(source);

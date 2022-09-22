@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, In, MoreThan, Repository } from 'typeorm';
 import Post from './entity/post.entity';
@@ -9,6 +9,7 @@ import PostsSearchService from './post-search.service';
 
 @Injectable()
 export class PostsService {
+  private readonly logger = new Logger(PostsService.name);
   constructor(
     @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
     private readonly postsSearchService: PostsSearchService,
@@ -46,6 +47,7 @@ export class PostsService {
     if (post) {
       return post;
     }
+    this.logger.warn('Tried to access a post that does not exist.');
     throw new PostNotFoundException(id);
   }
 

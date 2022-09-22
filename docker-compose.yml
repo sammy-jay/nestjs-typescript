@@ -10,6 +10,8 @@ services:
       - .:/server
     depends_on:
       - postgres
+      - redis
+      - mailhog
 
   client:
     container_name: client
@@ -25,7 +27,7 @@ services:
     image: postgres:14
     restart: always
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - /data/postgres:/data/postgres
     env_file:
@@ -39,7 +41,7 @@ services:
     container_name: pgadmin
     image: dpage/pgadmin4
     ports:
-      - '8080:80'
+      - "8080:80"
     volumes:
       - /data/pgadmin:/root/.pgadmin
     env_file:
@@ -48,7 +50,8 @@ services:
       - postgres
 
   redis:
-    image: "redis:alpine"
+    image: redis:alpine
+    restart: always
     ports:
       - "6379:6379"
 
@@ -64,80 +67,11 @@ services:
   mailhog:
     image: mailhog/mailhog
     logging:
-      driver: 'none'
+      driver: "none"
     ports:
       - "1025:1025"
       - "8025:8025"
-  es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.1
-    container_name: es01
-    environment:
-      - node.name=es01
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es02,es03
-      - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
-      - xpack.security.enabled=false
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - data01:/usr/share/elasticsearch/data
-    ports:
-      - 9200:9200
-    networks:
-      - elastic
-  es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.1
-    container_name: es02
-    environment:
-      - node.name=es02
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es01,es03
-      - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
-      - xpack.security.enabled=false
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - data02:/usr/share/elasticsearch/data
-    networks:
-      - elastic
-  es03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.1
-    container_name: es03
-    environment:
-      - node.name=es03
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es01,es02
-      - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
-      - xpack.security.enabled=false
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - data03:/usr/share/elasticsearch/data
-    networks:
-      - elastic
-
-volumes:
-  data01:
-    driver: local
-  data02:
-    driver: local
-  data03:
-    driver: local
 
 networks:
   postgres:
-    driver: bridge
-  elastic:
     driver: bridge

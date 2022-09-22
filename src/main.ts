@@ -4,12 +4,17 @@ import * as cookieparser from 'cookie-parser';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'aws-sdk';
+import getLogLevels from './utils/get-log-level';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: getLogLevels(process.env.NODE_ENV === 'production'),
+  });
+
   app.use(cookieparser());
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
   const configService = app.get(ConfigService);
   config.update({
     accessKeyId: configService.get('AWS_ACCESS_KEY_ID'),
