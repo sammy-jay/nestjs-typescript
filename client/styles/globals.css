@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .navLink {
+    @apply text-blue-600 font-semibold text-base border-b-2 border-b-transparent text-center hover:border-b-blue-700 cursor-pointer transition;
+  }
+}
