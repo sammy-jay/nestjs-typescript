@@ -49,6 +49,9 @@ class User {
   @Column({ default: false })
   public isPhoneNumberConfirmed: boolean;
 
+  @Column()
+  public stripeCustomerId: string;
+
   @JoinColumn()
   @OneToOne(() => Address, { eager: true, cascade: true })
   public address: Relation<Address>;

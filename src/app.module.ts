@@ -25,6 +25,7 @@ import { OptimizeModule } from './optimize/optimize.module';
 import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { SmsModule } from './sms/sms.module';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -79,6 +80,9 @@ import { SmsModule } from './sms/sms.module';
         TWILIO_AUTH_TOKEN: Joi.string().required(),
         TWILIO_VERIFICATION_SERVICE_SID: Joi.string().required(),
         TWILIO_SENDER_PHONE_NUMBER: Joi.string().required(),
+        STRIPE_SECRET_KEY: Joi.string().required(),
+        STRIPE_CURRENCY: Joi.string().required(),
+        FRONTEND_URL: Joi.string().required(),
         PORT: Joi.number(),
       }),
     }),
@@ -99,6 +103,7 @@ import { SmsModule } from './sms/sms.module';
     OptimizeModule,
     EmailConfirmationModule,
     SmsModule,
+    StripeModule,
   ],
   providers: [
     {

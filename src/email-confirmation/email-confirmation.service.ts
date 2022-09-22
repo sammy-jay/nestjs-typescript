@@ -29,10 +29,9 @@ export class EmailConfirmationService {
     const url = `${this.configService.get(
       'EMAIL_CONFIRMATION_URL',
     )}?token=${verificationToken}`;
-
     const filepath = join(
       __dirname,
-      '../../dist/email/template/email-verification.template.html',
+      '../email/template/email-verification.template.html',
     );
     const source = fs.readFileSync(filepath, 'utf8').toString();
     const template = handlebars.compile(source);

@@ -15,6 +15,7 @@ import * as bcrypt from 'bcrypt';
 import Address from './entity/address.entity';
 import User from './entity/user.entity';
 import { EmailService } from 'src/email/email.service';
+import { StripeService } from 'src/stripe/stripe.service';
 
 @Injectable()
 export class UsersService {
@@ -25,6 +26,7 @@ export class UsersService {
     private readonly publicFilesService: PublicFilesService,
     private readonly privateFilesService: PrivateFilesService,
     private readonly emailService: EmailService,
+    private readonly stripeService: StripeService,
     private readonly dataSource: DataSource,
   ) {}
 
@@ -192,10 +194,16 @@ export class UsersService {
   }
 
   async markEmailAsConfirmed(email: string) {
+    const user = await this.getByEmail(email);
+    const stripeCustomer = await this.stripeService.createCustomer(
+      user.name,
+      user.email,
+    );
     return await this.usersRepository.update(
       { email },
       {
         isEmailConfirmed: true,
+        stripeCustomerId: stripeCustomer.id,
       },
     );
   }

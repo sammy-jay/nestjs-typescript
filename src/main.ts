@@ -11,11 +11,20 @@ async function bootstrap() {
     logger: getLogLevels(process.env.NODE_ENV === 'production'),
   });
 
+  const configService = app.get(ConfigService);
+
+  // {
+  //   origin: [configService.get('FRONTEND_URL'), 'http://localhost:3000'],
+  //   credentials: true,
+  // }
+
+  app.enableCors({
+    origin: '*',
+  });
   app.use(cookieparser());
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
-  const configService = app.get(ConfigService);
   config.update({
     accessKeyId: configService.get('AWS_ACCESS_KEY_ID'),
     secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),

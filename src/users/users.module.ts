@@ -7,6 +7,7 @@ import Address from './entity/address.entity';
 import { PublicFilesModule } from 'src/public-files/public-files.module';
 import { PrivateFilesModule } from 'src/private-files/private-files.module';
 import { EmailModule } from 'src/email/email.module';
+import { StripeModule } from 'src/stripe/stripe.module';
 
 @Global()
 @Module({
@@ -15,6 +16,7 @@ import { EmailModule } from 'src/email/email.module';
     PublicFilesModule,
     PrivateFilesModule,
     EmailModule,
+    StripeModule,
   ],
   providers: [UsersService],
   controllers: [UsersController],
