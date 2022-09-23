@@ -5,9 +5,8 @@ import axios from 'axios';
 
 import CheckoutForm from '../components/CheckoutForm';
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-);
+const stripePromise =
+  loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) || '';
 
 export default function Checkout() {
   const [clientSecret, setClientSecret] = React.useState('');
@@ -17,7 +16,7 @@ export default function Checkout() {
       const items =
         { items: JSON.parse(localStorage.getItem('cart-items')) } || {};
       const res = await axios.post(
-        'https://5000-psmoke2-psmoke2-cv5fj266ne3.ws-eu67.gitpod.io/stripe/create-payment-intent',
+        'https://5000-psmoke2-psmoke2-cv5fj266ne3.ws-eu67.gitpod.io/api/v1/stripe/create-payment-intent',
         items,
       );
       const data = await res.data;

@@ -16,10 +16,10 @@ interface CartItem {
   title: string;
   price: number;
   image: string;
+  quantity: number;
 }
-const Home: NextPage<IProduct[]> = ({ products }: { products: IProduct[] }) => {
-  
-  const handleAddToCart = (product) => {
+function Home({ products }: { products: IProduct[] }) {
+  const handleAddToCart = (product: IProduct) => {
     let cartItems: CartItem[] =
       JSON.parse(localStorage.getItem('cart-items')) || [];
 
@@ -37,6 +37,7 @@ const Home: NextPage<IProduct[]> = ({ products }: { products: IProduct[] }) => {
         title: product.title,
         price: product.price,
         quantity: 1,
+        image: product.image
       };
       cartItems = [...cartItems, newItem];
       localStorage.setItem('cart-items', JSON.stringify(cartItems));
@@ -78,7 +79,7 @@ const Home: NextPage<IProduct[]> = ({ products }: { products: IProduct[] }) => {
       </section>
     </div>
   );
-};
+}
 
 export async function getStaticProps() {
   const res = await fetch('https://fakestoreapi.com/products/');
@@ -90,16 +91,3 @@ export async function getStaticProps() {
 }
 
 export default Home;
-
-const data = [
-  {
-    id: 1,
-    title: 'Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops',
-    price: 109.95,
-    description:
-      'Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday',
-    category: "men's clothing",
-    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
-    rating: { rate: 3.9, count: 120 },
-  },
-];
