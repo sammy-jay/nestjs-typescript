@@ -1,12 +1,5 @@
 import { Type } from 'class-transformer';
-import {
-  IsString,
-  IsNotEmpty,
-  IsArray,
-  IsInt,
-  IsNumber,
-  ValidateNested,
-} from 'class-validator';
+import { IsNotEmpty, IsInt, IsNumber, ValidateNested } from 'class-validator';
 
 export class Item {
   @IsNotEmpty()

@@ -13,6 +13,8 @@ import Post from '../../posts/entity/post.entity';
 import PublicFile from 'src/public-files/entity/public-file.entity';
 import PrivateFile from 'src/private-files/entity/private-file.entity';
 import Message from 'src/chat/entity/message.entity';
+import { Role } from '../enum/role.enum';
+import { Permission } from '../enum/permission.enum';
 
 @Entity()
 class User {
@@ -51,6 +53,21 @@ class User {
 
   @Column({ nullable: true })
   public stripeCustomerId: string;
+
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.User,
+  })
+  public role: Role;
+
+  @Column({
+    type: 'enum',
+    enum: Permission,
+    array: true,
+    default: [],
+  })
+  public permissions: Permission[];
 
   @JoinColumn()
   @OneToOne(() => Address, { eager: true, cascade: true })

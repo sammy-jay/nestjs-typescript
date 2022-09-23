@@ -18,6 +18,10 @@ import JwtTwoFactorGuard from 'src/auth/guard/jwt-two-factor.guard';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { RequestUser } from 'src/auth/interface/request-user.interface';
 import { EmailConfirmationGuard } from 'src/email-confirmation/guard/email-confirmation.guard';
+import { Permission } from 'src/users/enum/permission.enum';
+import { Role } from 'src/users/enum/role.enum';
+import PermissionGuard from 'src/users/guard/permission.guard';
+import RoleGuard from 'src/users/guard/role.guard';
 import { ExceptionLoggerFilter } from 'src/utils/exceptions-logger.filter';
 import { FindOneParams } from 'src/utils/find-one.params';
 import { PaginationParams } from 'src/utils/pagination.params';
@@ -33,6 +37,7 @@ export class PostsController {
   @Get()
   @HttpCode(200)
   @UseInterceptors(CacheInterceptor)
+  @UseGuards(RoleGuard(Role.User))
   getAllPosts(
     @Query('paragraph') paragraph: string,
     @Query() { offset, limit }: PaginationParams,
@@ -59,8 +64,9 @@ export class PostsController {
 
   @Post()
   @HttpCode(201)
-  @UseGuards(EmailConfirmationGuard)
   @UseGuards(JwtTwoFactorGuard)
+  @UseGuards(EmailConfirmationGuard)
+  @UseGuards(PermissionGuard(Permission.CreatePost))
   async createPost(@Body() post: CreatePostDto, @Req() req: RequestUser) {
     return this.postsService.createPost(post, req.user);
   }
@@ -73,6 +79,7 @@ export class PostsController {
 
   @Delete(':id')
   @HttpCode(204)
+  @UseGuards(RoleGuard(Role.Admin))
   async deletePost(@Param('id') id: string) {
     return this.postsService.deletePost(Number(id));
   }
