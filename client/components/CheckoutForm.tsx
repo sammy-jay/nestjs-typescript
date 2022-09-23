@@ -58,7 +58,8 @@ export default function CheckoutForm() {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: 'http://localhost:3000',
+        return_url:
+          'https://3000-psmoke2-psmoke2-cv5fj266ne3.ws-eu67.gitpod.io/',
       },
     });
 
@@ -77,7 +78,7 @@ export default function CheckoutForm() {
   };
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
+    <form id="payment-form" onSubmit={handleSubmit} className="mx-auto mt-5">
       <PaymentElement id="payment-element" />
       <button disabled={isLoading || !stripe || !elements} id="submit">
         <span id="button-text">
