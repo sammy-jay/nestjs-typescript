@@ -13,6 +13,6 @@ export class StripeController {
   // @UseGuards(JwtGuard)
   async createCharge(@Body() intentData: CreateIntentDto) {
     const amount = await this.stripeService.getAmount(intentData.items);
-    return await this.stripeService.charge(Number(amount.toFixed(0)));
+    return await this.stripeService.charge(Number(amount.toFixed(0)) * 100);
   }
 }
