@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
+import { Item } from './dto/create-charge.dto';
 
 @Injectable()
 export class StripeService {
@@ -29,5 +30,9 @@ export class StripeService {
     return {
       clientSecret: paymentIntent.client_secret,
     };
+  }
+
+  async getAmount(items: Item[]) {
+    return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   }
 }

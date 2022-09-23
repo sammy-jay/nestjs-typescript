@@ -22,7 +22,7 @@ async function bootstrap() {
     origin: '*',
   });
   app.use(cookieparser());
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   config.update({

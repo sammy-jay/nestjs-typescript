@@ -31,7 +31,7 @@ export class EmailConfirmationService {
     )}?token=${verificationToken}`;
     const filepath = join(
       __dirname,
-      '../email/template/email-verification.template.html',
+      '../../src/email/template/email-verification.template.html',
     );
     const source = fs.readFileSync(filepath, 'utf8').toString();
     const template = handlebars.compile(source);

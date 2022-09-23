@@ -39,7 +39,6 @@ export class AuthController {
     @Body() registrationData: RegistrationDto,
     @Body('address') address: Address,
   ) {
-    console.log('called');
     const user = await this.authService.register(registrationData);
     if (user) {
       await this.emailConfirmationService.sendVerificationLink(user.email);

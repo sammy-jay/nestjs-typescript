@@ -1,10 +1,29 @@
-import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsString,
+  IsNotEmpty,
+  IsArray,
+  IsInt,
+  IsNumber,
+  ValidateNested,
+} from 'class-validator';
 
-export class CreateChargeDto {
+export class Item {
   @IsNotEmpty()
-  @IsString()
-  paymentMethodId: string;
+  @IsInt()
+  id: number;
 
+  @IsNotEmpty()
   @IsNumber()
-  amount: number;
+  price: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  quantity: number;
+}
+export class CreateIntentDto {
+  @IsNotEmpty()
+  @ValidateNested()
+  @Type(() => Item)
+  items: Item[];
 }

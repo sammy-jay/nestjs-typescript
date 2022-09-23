@@ -49,7 +49,7 @@ class User {
   @Column({ default: false })
   public isPhoneNumberConfirmed: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   public stripeCustomerId: string;
 
   @JoinColumn()
