@@ -72,6 +72,17 @@ services:
       - "1025:1025"
       - "8025:8025"
 
+  nginx:
+    image: nginx:latest
+    container_name: webserver
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8000:8000"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+
 networks:
   postgres:
     driver: bridge

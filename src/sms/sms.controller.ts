@@ -11,8 +11,10 @@ import { RequestUser } from 'src/auth/interface/request-user.interface';
 import { CheckVerificationCodeDto } from './dto/check-verification-code.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { SmsService } from './sms.service';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('sms')
+@ApiTags('sms')
 @UseGuards(JwtGuard)
 export class SmsController {
   constructor(private readonly smsService: SmsService) {}

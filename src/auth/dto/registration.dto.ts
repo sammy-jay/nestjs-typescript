@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsString,
   IsEmail,
@@ -5,19 +6,18 @@ import {
   MinLength,
   Matches,
   IsObject,
+  ValidateNested,
+  IsOptional,
 } from 'class-validator';
 
 export class Address {
   @IsString()
-  @IsNotEmpty()
   street: string;
 
   @IsString()
-  @IsNotEmpty()
   city: string;
 
   @IsString()
-  @IsNotEmpty()
   country: string;
 }
 export class RegistrationDto {
@@ -39,7 +39,8 @@ export class RegistrationDto {
   @Matches(/^\+[1-9]\d{11,14}$/)
   phoneNumber: string;
 
-  @IsNotEmpty()
-  @IsObject()
-  address: any;
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => Address)
+  address: Address;
 }

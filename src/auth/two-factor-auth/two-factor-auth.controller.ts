@@ -9,6 +9,7 @@ import {
   Body,
   BadRequestException,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from '../auth.service';
@@ -18,6 +19,7 @@ import { TwoFactorAuthCodeDto } from './dto/two-factor-auth-code.dto';
 import { TwoFactorAuthService } from './two-factor-auth.service';
 
 @Controller('2fa')
+@ApiTags('2fa')
 @UseGuards(JwtGuard)
 export class TwoFactorAuthController {
   constructor(

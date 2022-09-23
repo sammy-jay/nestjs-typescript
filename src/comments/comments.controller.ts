@@ -14,8 +14,10 @@ import { CreateCommentCommand } from './commands/implementation/create-comment.c
 import CreateCommentDto from './dto/create-comment.dto';
 import GetCommentsDto from './dto/get-comments.dto';
 import { GetCommentsQuery } from './queries/implementation/get-comments.query';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('comments')
+@ApiTags('comments')
 @UseGuards(JwtGuard)
 export class CommentsController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}

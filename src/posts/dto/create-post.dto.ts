@@ -1,4 +1,5 @@
 import { IsString, IsNotEmpty, IsObject, IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreatePostDto {
   @IsString({ each: true })

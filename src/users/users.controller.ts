@@ -18,14 +18,19 @@ import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { RequestUser } from 'src/auth/interface/request-user.interface';
 import { UsersService } from './users.service';
 import { FindOneParams } from 'src/utils/find-one.params';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { FileUploadDto } from './dto/file-upload.dto';
 
 @Controller('users')
+@ApiTags('users')
 @UseGuards(JwtGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post('avatar')
   @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: FileUploadDto })
   async addAvatar(
     @Req() request: RequestUser,
     @UploadedFile(

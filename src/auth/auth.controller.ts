@@ -17,8 +17,11 @@ import { LocalGuard } from './guard/local.guard';
 import { RequestUser } from './interface/request-user.interface';
 import { UsersService } from 'src/users/users.service';
 import { EmailConfirmationService } from 'src/email-confirmation/email-confirmation.service';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
+@ApiTags('auth')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
   constructor(
@@ -49,6 +52,7 @@ export class AuthController {
   @HttpCode(200)
   @UseGuards(LocalGuard)
   @Post('login')
+  @ApiBody({ type: LoginDto })
   async login(@Req() request: RequestUser) {
     const user = request.user;
     delete user.password;

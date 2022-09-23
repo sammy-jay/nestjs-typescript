@@ -3,8 +3,9 @@ import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { RequestUser } from 'src/auth/interface/request-user.interface';
 import { StripeService } from './stripe.service';
 import { CreateIntentDto } from './dto/create-charge.dto';
-
+import { ApiTags } from '@nestjs/swagger';
 @Controller('stripe')
+@ApiTags('stripe')
 export class StripeController {
   constructor(private readonly stripeService: StripeService) {}
 

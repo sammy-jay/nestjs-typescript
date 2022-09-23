@@ -2,8 +2,10 @@ import { Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { RequestUser } from 'src/auth/interface/request-user.interface';
 import { EmailConfirmationService } from './email-confirmation.service';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('email-confirmation')
+@ApiTags('email-confirmation')
 export class EmailConfirmationController {
   constructor(
     private readonly emailConfirmationService: EmailConfirmationService,

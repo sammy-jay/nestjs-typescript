@@ -1,4 +1,4 @@
-import { IsInt, Min, IsOptional } from 'class-validator';
+import { IsInt, Min, IsOptional, MinLength, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class PaginationParams {
@@ -19,4 +19,10 @@ export class PaginationParams {
   @IsInt()
   @Min(1)
   limit?: number;
+
+  @IsOptional()
+  @Type(() => String)
+  @IsString()
+  @MinLength(3)
+  paragraph?: string;
 }

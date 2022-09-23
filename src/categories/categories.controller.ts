@@ -16,8 +16,10 @@ import { FindOneParams } from 'src/utils/find-one.params';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('categories')
+@ApiTags('categories')
 @UseFilters(ExceptionLoggerFilter)
 @UseGuards(JwtGuard)
 export class CategoriesController {

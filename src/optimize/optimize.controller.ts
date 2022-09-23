@@ -11,8 +11,10 @@ import {
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { Express, Response } from 'express';
 import { Queue } from 'bull';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('optimize')
+@ApiTags('optimize')
 export class OptimizeController {
   constructor(@InjectQueue('image') private readonly imageQueue: Queue) {}
 

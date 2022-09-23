@@ -1,7 +1,7 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumberString } from 'class-validator';
 
 export class TwoFactorAuthCodeDto {
-  @IsString()
+  @IsNumberString()
   @IsNotEmpty()
   twoFactorAuthCode: string;
 }

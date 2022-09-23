@@ -14,6 +14,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import JwtTwoFactorGuard from 'src/auth/guard/jwt-two-factor.guard';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { RequestUser } from 'src/auth/interface/request-user.interface';
@@ -24,11 +25,12 @@ import PermissionGuard from 'src/users/guard/permission.guard';
 import RoleGuard from 'src/users/guard/role.guard';
 import { ExceptionLoggerFilter } from 'src/utils/exceptions-logger.filter';
 import { FindOneParams } from 'src/utils/find-one.params';
-import { PaginationParams } from 'src/utils/pagination.params';
+import { PaginationParams } from 'src/utils/pagination.params.dto';
 import { CreatePostDto, UpdatePostDto } from './dto';
 import { PostsService } from './posts.service';
 
 @Controller('posts')
+@ApiTags('posts')
 @UseFilters(ExceptionLoggerFilter)
 @UseGuards(JwtGuard)
 export class PostsController {
@@ -37,11 +39,8 @@ export class PostsController {
   @Get()
   @HttpCode(200)
   @UseInterceptors(CacheInterceptor)
-  @UseGuards(RoleGuard(Role.User))
-  getAllPosts(
-    @Query('paragraph') paragraph: string,
-    @Query() { offset, limit }: PaginationParams,
-  ) {
+  // @UseGuards(RoleGuard(Role.User))
+  getAllPosts(@Query() { offset, limit, paragraph }: PaginationParams) {
     if (paragraph) {
       return this.postsService.getPostsWithParagraph(paragraph, offset, limit);
     }

@@ -1,9 +1,11 @@
 import { Body, Controller, Get, Inject, Post, UseGuards } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 
 @Controller('subscribers')
+@ApiTags('subscribers')
 @UseGuards(JwtGuard)
 export class SubscribersController {
   constructor(
